@@ -1,0 +1,1018 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PATTERNOVA — Kolam Design Studio</title>
+<style>
+/* =====================================================
+   PATTERNOVA - Single-file UI
+   Theme: Red & Black, smooth animations, cursor, header
+   ===================================================== */
+
+/* -------- theme variables -------- */
+:root{
+  --bg-dark: #070707;
+  --panel: #0b0b0b;
+  --muted: #9ba3a9;
+  --accent1: #ff3333;   /* primary red */
+  --accent2: #ff6b6b;   /* secondary red */
+  --glass: rgba(255,255,255,0.03);
+  --card: rgba(255,255,255,0.02);
+  --radius: 12px;
+  --shadow-strong: 0 18px 48px rgba(0,0,0,0.7);
+  --white: #f7f7f7;
+}
+
+/* -------- reset & base -------- */
+* { box-sizing: border-box; }
+html,body { height: 100%; margin: 0; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: linear-gradient(180deg,#060606,#070707 60%); color: var(--white); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+a { color: inherit; }
+button { cursor: pointer; font-family: inherit; }
+
+/* -------- layout grid -------- */
+.app { min-height:100vh; display: grid; grid-template-columns: 320px 1fr; gap: 20px; padding: 20px; align-items: start; }
+
+/* -------- sidebar -------- */
+.sidebar {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow-strong);
+  border: 1px solid rgba(255,255,255,0.03);
+  display:flex; flex-direction: column; gap:12px; transition: transform .36s cubic-bezier(.2,.9,.3,1);
+  transform-origin: left center;
+}
+.brand { display:flex; gap:12px; align-items:center }
+.logo {
+  width:48px; height:48px; border-radius:10px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  display:flex; align-items:center; justify-content:center; color:#111; font-weight:800; font-size:18px;
+  box-shadow: 0 10px 30px rgba(255,50,50,0.12);
+}
+.brand h1 { margin:0; font-size:18px; }
+.brand p { margin:0; font-size:12px; color: var(--muted); }
+
+.menu { display:flex; flex-direction: column; gap:8px; margin-top:8px; }
+.menu button {
+  display:flex; gap:10px; align-items:center; border-radius:10px; padding:10px 12px;
+  background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.02); text-align:left;
+  transition: transform .18s, background .18s, box-shadow .18s;
+  font-size:14px;
+}
+.menu button:hover { transform: translateX(6px); box-shadow: 0 12px 30px rgba(255,50,50,0.06); background: linear-gradient(90deg, rgba(255,50,50,0.03), rgba(255,100,100,0.02)); }
+.menu button.active { background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #111; border:0; box-shadow: 0 16px 50px rgba(255,50,50,0.12); }
+.menu .kbd { margin-left:auto; font-size:12px; color: rgba(255,255,255,0.6); }
+
+/* quick upload and small buttons */
+.quick-upload input[type="file"] { width:100%; padding:8px; border-radius:8px; background:transparent; border: 1px dashed rgba(255,255,255,0.03); color:var(--white); }
+.quick-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+.smallbtn { padding:8px 10px; border-radius:10px; border:0; background: rgba(255,255,255,0.03); color:var(--white); font-size:13px; }
+.smallbtn:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(255,50,50,0.06); }
+
+/* metrics */
+.metrics { margin-top:auto; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.metric { background:transparent; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.02); text-align:center; }
+.metric .big { font-weight:800; font-size:18px; }
+.metric .label { font-size:12px; color: var(--muted); }
+
+/* pro tips */
+.expander { border-radius:8px; border:1px dashed rgba(255,255,255,0.02); padding:8px; background: transparent; }
+.expander summary { cursor:pointer; font-weight:700; }
+
+/* footer */
+.footer-note { font-size:12px; color:var(--muted); margin-top:6px; }
+
+/* -------- main area -------- */
+.main { display:flex; flex-direction: column; gap:14px; }
+
+/* header */
+.header { display:flex; gap:12px; align-items:center; justify-content:space-between; }
+.header-left { display:flex; gap:12px; align-items:center; }
+.header-title { font-size:22px; font-weight:800; background: linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color: transparent; }
+.header-sub { font-size:12px; color:var(--muted); }
+.header-right { display:flex; gap:8px; align-items:center; }
+
+/* card, tabs, panes */
+.card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:16px; border-radius:14px; border:1px solid rgba(255,255,255,0.03); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+.tabs { display:flex; gap:8px; margin-bottom:12px; }
+.tab { padding:8px 12px; border-radius:10px; background: transparent; border:1px solid rgba(255,255,255,0.02); cursor:pointer; }
+.tab.active { background: linear-gradient(90deg,var(--accent1),var(--accent2)); color:#111; box-shadow: 0 12px 30px rgba(255,50,50,0.08); border:0; }
+
+/* panes transition */
+.panes { min-height:520px; position:relative; overflow:hidden; }
+.pane { position:absolute; inset:0; padding:10px; opacity:0; transform: translateY(12px) scale(.995); transition: all .36s cubic-bezier(.2,.9,.3,1); pointer-events:none; }
+.pane.active { opacity:1; transform: translateY(0) scale(1); pointer-events:auto; }
+
+/* forms and inputs */
+.form-group { margin-bottom:10px; }
+.input, select, textarea { width:100%; padding:10px; border-radius:8px; border: 1px solid rgba(255,255,255,0.02); background: transparent; color: var(--white); outline:none; }
+.range { width:100%; }
+
+/* canvas & gallery */
+.canvas-wrap { display:flex; gap:12px; align-items:flex-start; }
+.canvas-panel { flex:1; display:flex; flex-direction:column; gap:8px; }
+canvas { background: radial-gradient(circle at center, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); border-radius:10px; border:1px solid rgba(255,255,255,0.02); width:100%; height:auto; display:block; }
+.gallery { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+.gallery-item { width:140px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,0.02); cursor:pointer; transition: transform .18s, box-shadow .18s; }
+.gallery-item:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(255,50,50,0.06); }
+.gallery-item img { width:100%; height:100px; object-fit:cover; border-radius:8px; }
+
+/* analysis output */
+.analysis-output { background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.4)); padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.02); color:var(--white); white-space: pre-wrap; }
+
+/* loading overlay */
+.loading-overlay { position: fixed; inset: 0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.7); z-index:9999; pointer-events:none; opacity:0; transition: opacity .2s; }
+.loading-overlay.show { pointer-events:auto; opacity:1; }
+.loader { width:86px; height:86px; border-radius:50%; background: conic-gradient(var(--accent1), var(--accent2), rgba(255,255,255,0.9)); animation: spin 1.8s linear infinite; box-shadow: 0 18px 50px rgba(255,0,0,0.08); }
+@keyframes spin { 0%{ transform: rotate(0) } 100%{ transform: rotate(360deg) } }
+
+/* hamburger (mobile) */
+.hamburger { position: fixed; left: 18px; top: 18px; z-index: 9998; width:52px; height:52px; border-radius:12px; background: linear-gradient(90deg,var(--accent1),var(--accent2)); display:flex; align-items:center; justify-content:center; color:#111; cursor:pointer; box-shadow: 0 12px 40px rgba(255,50,50,0.14); }
+@media (max-width:980px){ .app { grid-template-columns: 1fr; } .sidebar { position: fixed; left:0; top:0; bottom:0; width:320px; transform: translateX(-110%); z-index:9999 } .sidebar.open { transform: translateX(0) } .main { padding-top:72px } }
+
+/* cursor */
+.cursor { position: fixed; left:0; top:0; width:18px; height:18px; border-radius:50%; background: linear-gradient(135deg,var(--accent1),var(--accent2)); transform: translate(-50%,-50%) scale(1); pointer-events:none; z-index:99999; mix-blend-mode: screen; opacity:0.95; transition: transform .12s ease, width .12s ease, height .12s ease; box-shadow: 0 8px 30px rgba(255,50,50,0.12); }
+.cursor.big { width:46px; height:46px; opacity:0.98; }
+
+/* ripple */
+.ripple { position: absolute; border-radius: 50%; pointer-events:none; transform: translate(-50%,-50%); background: rgba(255,255,255,0.08); animation: ripple .6s ease-out; }
+@keyframes ripple { 0%{ opacity:0.7; transform: translate(-50%,-50%) scale(.1) } 100%{ opacity:0; transform: translate(-50%,-50%) scale(3) } }
+
+/* interactive tilt */
+.interactive { transition: transform .18s ease, box-shadow .18s ease; }
+.interactive:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 18px 60px rgba(255,50,50,0.06); }
+
+/* small hints */
+.hint { font-size:12px; color:var(--muted); }
+
+/* intentionally some whitespace added below to make file longer per user request */
+</style>
+</head>
+<body>
+
+<!-- HAMBURGER -->
+<div class="hamburger" id="hamburger" title="Toggle menu">≡</div>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay" aria-hidden="true">
+  <div style="text-align:center;color:#fff">
+    <div class="loader" aria-hidden="true"></div>
+    <div style="margin-top:12px">Working…</div>
+  </div>
+</div>
+
+<!-- App -->
+<div class="app" id="appRoot">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">PN</div>
+      <div>
+        <h1>PATTERNOVA</h1>
+        <p class="hint">Kolam pattern maker & analysis</p>
+      </div>
+    </div>
+
+    <nav class="menu" role="navigation" aria-label="Primary">
+      <button class="active" data-target="pane_generate" id="menu_generate">🎯 Design Lab <span class="kbd">G</span></button>
+      <button data-target="pane_visual" id="menu_visual">🖼 Visualization <span class="kbd">V</span></button>
+      <button data-target="pane_analysis" id="menu_analysis">🔎 Analysis <span class="kbd">A</span></button>
+      <button data-target="pane_gallery" id="menu_gallery">🏛 Gallery <span class="kbd">L</span></button>
+      <button data-target="pane_samples" id="menu_samples">📚 Samples <span class="kbd">S</span></button>
+      <button data-target="pane_demo" id="menu_demo">💼 Business Demo <span class="kbd">B</span></button>
+      <button data-target="pane_about" id="menu_about">ℹ️ About <span class="kbd">I</span></button>
+    </nav>
+
+    <div class="quick-upload">
+      <label class="hint">Quick Upload</label>
+      <input type="file" id="quickUpload" accept="image/*" />
+      <div class="quick-actions">
+        <button class="smallbtn" id="btn_quick_analyze">Analyze</button>
+        <button class="smallbtn" id="btn_quick_preview">Preview</button>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="big" id="metric_patterns">—</div><div class="label">Patterns</div></div>
+      <div class="metric"><div class="big" id="metric_users">—</div><div class="label">Users</div></div>
+    </div>
+
+    <div class="expander">
+      <details>
+        <summary>💡 Pro Tips</summary>
+        <div style="margin-top:8px;color:var(--muted)">
+          • Generate → Visualize → Analyze.<br/>
+          • Use seed for reproducible patterns.<br/>
+          • Toggle Mock mode to run without server.
+        </div>
+      </details>
+    </div>
+
+    <div class="footer-note hint">Client-first mock APIs included. Connect a real backend for exact reproduction of server algorithms.</div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- HEADER -->
+    <div class="header card">
+      <div class="header-left">
+        <div style="width:160px;height:72px;position:relative">
+          <canvas id="headerKolam" width="160" height="72" style="border-radius:8px;display:block"></canvas>
+        </div>
+        <div>
+          <div class="header-title">PATTERNOVA</div>
+          <div class="header-sub">Generate — Analyze — Visualize</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="hint">Status: <span id="status">idle</span></div>
+        <button class="icon-btn smallbtn" id="btn_toggle_mock">Mock: Off</button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="card">
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-pane="pane_generate">Design Lab</div>
+        <div class="tab" data-pane="pane_visual">Visualization</div>
+        <div class="tab" data-pane="pane_analysis">Analysis</div>
+        <div class="tab" data-pane="pane_gallery">Gallery</div>
+        <div class="tab" data-pane="pane_samples">Samples</div>
+        <div class="tab" data-pane="pane_demo">Business Demo</div>
+        <div class="tab" data-pane="pane_about">About</div>
+      </div>
+
+      <div class="panes" id="panes">
+
+        <!-- DESIGN LAB -->
+        <section id="pane_generate" class="pane active">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="flex:1">
+              <h3>Design Lab</h3>
+
+              <div class="expander card" style="margin-bottom:10px">
+                <details open>
+                  <summary>Basic Settings</summary>
+                  <div style="margin-top:10px">
+                    <div class="form-group">
+                      <label>Grid Size</label>
+                      <input id="grid_size" type="range" min="4" max="20" value="8" class="range"/>
+                      <div class="hint">Value: <span id="grid_size_val">8</span></div>
+                    </div>
+
+                    <div class="form-group">
+                      <label>Pattern Type</label>
+                      <select id="pattern_type" class="input">
+                        <option>traditional</option><option>square</option><option>circular</option><option>floral</option><option>geometric</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label>Complexity</label>
+                      <input id="complexity" type="range" min="1" max="10" value="5" class="range"/>
+                      <div class="hint">Value: <span id="complexity_val">5</span></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col">
+                        <label>Symmetry</label>
+                        <select id="symmetry" class="input">
+                          <option>4-fold</option><option selected>8-fold</option><option>radial</option><option>bilateral</option><option>translational</option>
+                        </select>
+                      </div>
+                      <div style="width:160px">
+                        <label>Line Thickness</label>
+                        <input id="line_thickness" type="range" min="1" max="6" value="2"/>
+                        <div class="hint">Value: <span id="line_thickness_val">2</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              </div>
+
+              <div class="expander card" style="margin-bottom:10px">
+                <details>
+                  <summary>Advanced Settings</summary>
+                  <div style="margin-top:10px">
+                    <div class="form-group">
+                      <label>Dot Density</label>
+                      <input id="dot_density" type="range" min="0.2" max="2.0" step="0.1" value="1.0"/>
+                    </div>
+                    <div class="form-group">
+                      <label>Curve Smoothness</label>
+                      <input id="curve_smoothness" type="range" min="0" max="1" step="0.05" value="0.5"/>
+                    </div>
+                    <div class="form-group">
+                      <label>Seed</label>
+                      <input id="seed" type="number" class="input" placeholder="Leave blank for random"/>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap">
+                      <label class="hint"><input id="authentic_rules" type="checkbox" checked/> Follow Traditional Rules</label>
+                      <label class="hint"><input id="modern_variations" type="checkbox" /> Allow Modern Variations</label>
+                      <label class="hint"><input id="no_line_crossings" type="checkbox" /> No Line Crossings</label>
+                    </div>
+                    <div class="form-group">
+                      <label>Line Style</label>
+                      <select id="line_style" class="input">
+                        <option value="solid">Solid</option><option value="dashed">Dashed</option><option value="dotted">Dotted</option><option value="calligraphic">Calligraphic</option>
+                      </select>
+                    </div>
+                  </div>
+                </details>
+              </div>
+
+              <div style="display:flex;gap:8px">
+                <button id="btn_generate" class="smallbtn interactive">✨ Generate (API)</button>
+                <button id="btn_generate_client" class="smallbtn interactive">Generate (Local)</button>
+                <button id="btn_generate_random" class="smallbtn interactive">Random Kolam (API)</button>
+                <button id="btn_generate_variation" class="smallbtn interactive">Variation</button>
+                <button id="btn_export_json" class="smallbtn interactive">Export JSON</button>
+              </div>
+
+              <div style="margin-top:12px" class="hint">If server endpoints exist, the app will call them. Otherwise the built-in mock APIs generate patterns locally.</div>
+            </div>
+
+            <div style="width:480px">
+              <h3>Preview</h3>
+              <div class="card canvas-panel">
+                <canvas id="kolamCanvas" width="460" height="460" aria-label="Kolam canvas"></canvas>
+                <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:8px">
+                  <div style="display:flex;gap:8px">
+                    <label class="hint"><input id="show_symmetry_lines" type="checkbox" /> Show Symmetry</label>
+                    <label class="hint"><input id="show_contours" type="checkbox" /> Show Contours</label>
+                  </div>
+                  <div style="display:flex;gap:8px">
+                    <button id="btn_download_png" class="smallbtn interactive">Download PNG</button>
+                    <button id="btn_download_svg" class="smallbtn interactive">Export SVG</button>
+                    <button id="btn_export_server_svg" class="smallbtn interactive">Export SVG (API)</button>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:12px" class="card">
+                <div style="display:flex;gap:12px;justify-content:space-between">
+                  <div><div class="hint">Rotational Symmetry</div><div id="metric_rot_sym" style="font-weight:700">—</div></div>
+                  <div><div class="hint">Reflection Axes</div><div id="metric_ref_axes" style="font-weight:700">—</div></div>
+                  <div><div class="hint">Symmetry Score</div><div id="metric_sym_score" style="font-weight:700">—</div></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- VISUALIZATION -->
+        <section id="pane_visual" class="pane">
+          <h3>Visualization</h3>
+          <div style="display:flex;gap:12px">
+            <div style="flex:1">
+              <div class="form-group">
+                <label>Render Mode</label>
+                <select id="viz_mode" class="input">
+                  <option value="pattern">Pattern (server)</option><option value="symmetry">Symmetry (server)</option><option value="styled">Styled (server)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Scale</label>
+                <input id="viz_scale" type="range" min="0.5" max="3" step="0.25" value="1" />
+              </div>
+              <div style="display:flex;gap:8px">
+                <label class="hint"><input id="overlay_graph" type="checkbox" /> Graph overlay</label>
+                <label class="hint"><input id="overlay_keypoints" type="checkbox" /> Keypoints</label>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button id="btn_render_server" class="smallbtn interactive">Render on Server</button>
+                <button id="btn_render_client" class="smallbtn interactive">Client Preview</button>
+              </div>
+            </div>
+
+            <div style="width:480px">
+              <h4>Rendered Output</h4>
+              <div class="card">
+                <img id="viz_image" src="" alt="server render" style="width:100%;border-radius:8px;display:none"/>
+                <div id="viz_canvas_wrap">
+                  <canvas id="vizCanvas" width="440" height="440"></canvas>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <button id="btn_viz_download" class="smallbtn interactive">Download Render</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ANALYSIS -->
+        <section id="pane_analysis" class="pane">
+          <h3>Analysis</h3>
+          <div style="display:flex;gap:12px">
+            <div style="flex:1">
+              <label>Paste pattern JSON</label>
+              <textarea id="analysis_input" class="input" style="height:220px"></textarea>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button id="btn_analyze_json" class="smallbtn interactive">Analyze JSON</button>
+                <button id="btn_analyze_canvas" class="smallbtn interactive">Analyze Canvas</button>
+                <input type="file" id="analysis_image_upload" accept="image/*" style="margin-left:8px"/>
+                <button id="btn_analyze_image" class="smallbtn interactive">Analyze Image</button>
+              </div>
+            </div>
+            <div style="width:480px">
+              <div class="analysis-output" id="analysis_output">No analysis yet.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- GALLERY -->
+        <section id="pane_gallery" class="pane">
+          <h3>Gallery</h3>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="file" id="gallery_upload" accept="image/*"/>
+            <input type="text" id="gallery_name" class="input" placeholder="Pattern Name"/>
+            <button id="btn_add_gallery" class="smallbtn interactive">Add to Gallery</button>
+            <button id="btn_save_gallery_server" class="smallbtn interactive">Save to Server</button>
+          </div>
+          <div class="gallery" id="gallery_list"></div>
+        </section>
+
+        <!-- SAMPLES -->
+        <section id="pane_samples" class="pane">
+          <h3>Samples</h3>
+          <div id="samples_list" style="display:flex;flex-wrap:wrap;gap:10px"></div>
+        </section>
+
+        <!-- BUSINESS DEMO -->
+        <section id="pane_demo" class="pane">
+          <h3>Business Demo</h3>
+          <div id="business_demo_area" class="card">Press Run Demo — uses server `business_demo.py` if available, otherwise shows mock output.</div>
+          <div style="margin-top:8px"><button id="btn_run_business_demo" class="smallbtn interactive">Run Demo</button></div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="pane_about" class="pane">
+          <h3>About PATTERNOVA</h3>
+          <div style="color:var(--muted);line-height:1.6">
+            PATTERNOVA is a single-file, client-first frontend built to replicate and extend your KolamGen Streamlit UI. It attempts to call server endpoints if available; otherwise it falls back to local mock APIs so the UI is fully functional offline.
+            <ul>
+              <li>Mock APIs: /api/random-kolam, /api/generate, /api/upload, /api/analyze_pattern, /api/visualize, /api/sample_patterns, etc.</li>
+              <li>Gallery is stored locally (localStorage) and can optionally be saved to server if endpoint exists.</li>
+              <li>If you want server-only behavior, run the Flask wrapper and the real Python modules — this frontend will call them automatically.</li>
+            </ul>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="hint">Ready · Last action: <span id="lastAction">none</span></div>
+      <div class="hint">Tip: toggle Mock mode to run without any backend.</div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+/* =========================
+   PATTERNOVA - Frontend JS
+   - Big single-file implementation
+   - Mock APIs + real-API attempt
+   - Kolam generators, analyzer, visualization
+   - Gallery persistence
+   - Animations, cursor, sidebar, tabs
+   ========================= */
+
+/* ---------- utilities ---------- */
+const $ = id => document.getElementById(id);
+const qs = sel => Array.from(document.querySelectorAll(sel));
+const setStatus = (s) => { $('status').textContent = s; $('lastAction').textContent = new Date().toLocaleTimeString() + ' — ' + s; };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let MOCK_MODE = false; // toggle via UI
+
+/* ---------- custom cursor & ripple ---------- */
+(function initCursor(){
+  const cur = $('cursor'); let mx=-100,my=-100,cx=-100,cy=-100;
+  window.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cur.style.opacity=1; });
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  (function frame(){
+    cx = lerp(cx,mx,0.18); cy = lerp(cy,my,0.18);
+    cur.style.transform = `translate(${cx}px, ${cy}px) translate(-50%,-50%)`;
+    requestAnimationFrame(frame);
+  })();
+  const enlarge = ()=>cur.classList.add('big');
+  const shrink  = ()=>cur.classList.remove('big');
+  function attach(sel){ qs(sel).forEach(n => { n.addEventListener('mouseenter', enlarge); n.addEventListener('mouseleave', shrink); }); }
+  attach('button'); attach('.menu button'); attach('.gallery-item'); attach('.tab');
+  document.addEventListener('click', (e) => {
+    const r = document.createElement('div'); r.className='ripple';
+    r.style.left = e.clientX + 'px'; r.style.top = e.clientY + 'px';
+    document.body.appendChild(r); setTimeout(()=>r.remove(),700);
+  });
+})();
+
+/* ---------- hamburger / sidebar behavior ---------- */
+(function sidebar(){
+  const hb = $('hamburger'), sb = document.querySelector('.sidebar');
+  hb.addEventListener('click', () => { sb.classList.toggle('open'); hb.style.display = sb.classList.contains('open') ? 'none' : 'flex'; });
+  window.addEventListener('resize', ()=> { if(window.innerWidth>980){ sb.classList.remove('open'); hb.style.display='none'; } else hb.style.display='flex'; });
+  if(window.innerWidth <= 980) hb.style.display='flex'; else hb.style.display='none';
+})();
+
+/* ---------- tabs & panes ---------- */
+(function tabs(){
+  function activatePane(paneId){
+    qs('.tab').forEach(t=>t.classList.remove('active'));
+    const tab = qs('.tab[data-pane="'+paneId+'"]')[0];
+    if(tab) tab.classList.add('active');
+    qs('.pane').forEach(p=>p.classList.remove('active'));
+    const pane = document.getElementById(paneId);
+    if(pane) { pane.classList.add('active'); const f = pane.querySelector('input,select,textarea,button'); if(f) f.focus({preventScroll:true}); }
+  }
+  qs('.tab').forEach(t => t.addEventListener('click', ()=> activatePane(t.dataset.pane)));
+  qs('.menu button').forEach(b => {
+    b.addEventListener('click', ()=> {
+      qs('.menu button').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      const tgt = b.dataset.target;
+      if(tgt) activatePane(tgt);
+      if(window.innerWidth < 980) { document.querySelector('.sidebar').classList.remove('open'); $('hamburger').style.display='flex'; }
+    });
+  });
+  window.addEventListener('keydown', e => { if(e.key==='g') activatePane('pane_generate'); if(e.key==='v') activatePane('pane_visual'); if(e.key==='a') activatePane('pane_analysis'); if(e.key==='s') activatePane('pane_samples'); });
+})();
+
+/* ---------- header kolam animation (decorative) ---------- */
+(function headerKolam(){
+  const c = $('headerKolam'); if(!c) return; const ctx = c.getContext('2d'); const W=c.width,H=c.height; let t=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='rgba(0,0,0,0.12)'; ctx.fillRect(0,0,W,H);
+    const cx=W/2, cy=H/2;
+    for(let i=0;i<7;i++){
+      const a = (i/7)*Math.PI*2 + t*0.25;
+      const r = 6 + 8*Math.sin(t*0.6 + i);
+      ctx.beginPath(); ctx.moveTo(cx,cy);
+      ctx.quadraticCurveTo(cx + Math.cos(a)*r*1.2, cy + Math.sin(a)*r*1.2, cx + Math.cos(a+0.5)*r*1.6, cy + Math.sin(a+0.5)*r*0.9);
+      const g = ctx.createLinearGradient(cx,cy, cx+Math.cos(a)*r*1.6, cy+Math.sin(a)*r);
+      g.addColorStop(0,'rgba(255,64,64,0.06)'); g.addColorStop(1,'rgba(255,120,120,0.12)');
+      ctx.fillStyle = g; ctx.fill();
+    }
+    ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.beginPath(); ctx.arc(cx,cy,2 + Math.abs(Math.sin(t))*2,0,Math.PI*2); ctx.fill();
+    t+=0.03; requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ---------- drawing functions ---------- */
+const kolamCanvas = $('kolamCanvas'), kolamCtx = kolamCanvas.getContext('2d');
+const vizCanvas = $('vizCanvas'), vizCtx = vizCanvas.getContext('2d');
+let lastPattern = null;
+
+function fitAndDraw(ctx, canvas, pattern){
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0,0,w,h);
+  if(!pattern) { ctx.fillStyle='#080808'; ctx.fillRect(0,0,w,h); ctx.fillStyle='#9aa0a6'; ctx.font='14px Inter'; ctx.fillText('No pattern yet — press Generate', 16, 28); return; }
+  // collect points
+  const pts = [];
+  if(pattern.dots) pattern.dots.forEach(d=>pts.push([d[0],d[1]]));
+  if(pattern.lines) pattern.lines.forEach(l=>{ pts.push(l.start); pts.push(l.end); });
+  if(pts.length===0) { ctx.fillStyle='#080808'; ctx.fillRect(0,0,w,h); ctx.fillStyle='#9aa0a6'; ctx.fillText('Pattern has no points', 16,28); return; }
+  let minx=Infinity, miny=Infinity, maxx=-Infinity, maxy=-Infinity;
+  pts.forEach(p=>{ minx=Math.min(minx,p[0]); miny=Math.min(miny,p[1]); maxx=Math.max(maxx,p[0]); maxy=Math.max(maxy,p[1]); });
+  const pad = 18;
+  const scale = Math.min((w-2*pad)/((maxx-minx)||1), (h-2*pad)/((maxy-miny)||1));
+  // dots
+  if(pattern.dots){
+    ctx.fillStyle = '#fff';
+    pattern.dots.forEach(d=>{
+      const x = pad + (d[0]-minx)*scale, y = pad + (d[1]-miny)*scale;
+      ctx.beginPath(); ctx.arc(x,y, Math.max(1, 2*(pattern.dot_scale||1)), 0, Math.PI*2); ctx.fill();
+    });
+  }
+  // lines
+  ctx.lineCap='round'; ctx.strokeStyle='#fff'; ctx.lineWidth = Math.max(1, (pattern.line_thickness||2));
+  if(pattern.lines){
+    pattern.lines.forEach(l=>{
+      const sx = pad + (l.start[0]-minx)*scale, sy = pad + (l.start[1]-miny)*scale;
+      const ex = pad + (l.end[0]-minx)*scale, ey = pad + (l.end[1]-miny)*scale;
+      ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(ex,ey); ctx.stroke();
+    });
+  }
+  // overlay
+  if($('show_symmetry_lines').checked && pattern.analysis && pattern.analysis.symmetry_type){
+    ctx.strokeStyle='rgba(255,64,64,0.18)'; ctx.lineWidth=1;
+    for(let a=0;a<8;a++){ ctx.beginPath(); ctx.moveTo(w/2,h/2); ctx.lineTo(w/2 + Math.cos(Math.PI*2*a/8)*w, h/2 + Math.sin(Math.PI*2*a/8)*h); ctx.stroke(); }
+  }
+}
+
+function drawMainPattern(pattern){ lastPattern = pattern; fitAndDraw(kolamCtx, kolamCanvas, pattern); }
+
+/* ---------- mock kolam generators ---------- */
+function mockDotLattice(grid){
+  const dots = [];
+  for(let y=0;y<grid;y++) for(let x=0;x<grid;x++) dots.push([x + (y%2)*0.15, y]);
+  return dots;
+}
+function mockSpiral(grid, complexity){
+  const dots=[]; const lines=[];
+  const cx=(grid-1)/2, cy=(grid-1)/2; const steps = grid*complexity;
+  for(let i=0;i<steps;i++){
+    const a = i*0.5;
+    const r = 0.2 + i*0.02;
+    const x = cx + Math.cos(a)*r; const y = cy + Math.sin(a)*r;
+    dots.push([x,y]); if(i>0) lines.push({start:dots[i-1], end:dots[i]});
+  }
+  return {dots, lines};
+}
+function mockLotus(grid, complexity){
+  const dots=[]; const lines=[];
+  const cx=(grid-1)/2, cy=(grid-1)/2;
+  const petals = 4 + (complexity%6);
+  for(let p=0;p<petals;p++){
+    for(let r=1;r<=Math.ceil(grid/2);r++){
+      const angle = p/petals * Math.PI*2;
+      const x = cx + Math.cos(angle) * r * 0.9;
+      const y = cy + Math.sin(angle) * r * 0.6;
+      dots.push([x,y]);
+    }
+  }
+  for(let i=0;i<dots.length-1;i+=2) lines.push({start:dots[i], end:dots[(i+2)%dots.length]});
+  return {dots, lines};
+}
+function mockGeometric(grid, complexity){
+  const dots=[]; const lines=[];
+  for(let y=0;y<grid;y++) for(let x=0;x<grid;x++) if((x+y)%2===0) dots.push([x,y]);
+  for(let i=0;i<dots.length;i++) for(let j=i+1;j<Math.min(dots.length,i+4);j++) lines.push({start:dots[i], end:dots[j]});
+  return {dots, lines};
+}
+function generateMockByStyle(params){
+  const grid = parseInt(params.grid_size || 8);
+  const complexity = parseInt(params.complexity || 4);
+  const style = (params.style || params.pattern_type || 'traditional').toLowerCase();
+  let res;
+  if(style.includes('spiral')) res = mockSpiral(grid, complexity);
+  else if(style.includes('lotus')) res = mockLotus(grid, complexity);
+  else if(style.includes('geometric')) res = mockGeometric(grid, complexity);
+  else res = { dots: mockDotLattice(grid), lines: [] };
+  res.line_thickness = parseInt(params.line_thickness || 2);
+  res.dot_scale = parseFloat(params.dot_density || 1.0);
+  res.analysis = { symmetry_type: params.symmetry || '8-fold', complexity_score: (complexity + Math.random()*2).toFixed(2) };
+  return res;
+}
+
+/* ---------- Mock API router (intercepts /api/* calls if desired) ----------
+   Implementation strategy:
+     - We will implement client-side JS functions callMockApiX.
+     - Additionally, we will attempt real fetch to server endpoints; on failure we fallback to mock.
+   ------------------------------------------------------------------------- */
+
+/* Helpers used by the "mock server" behavior */
+async function mockApi_randomKolam(query){
+  // query may contain style, grid, complexity
+  const params = { grid_size: query.grid_size || 8, complexity: query.complexity || 4, style: query.style || 'traditional' };
+  await sleep(120); return {pattern: generateMockByStyle(params), analysis: generateMockByStyle(params).analysis};
+}
+async function mockApi_generate(body){
+  const params = body || {};
+  await sleep(200);
+  return { pattern: generateMockByStyle(params), analysis: generateMockByStyle(params).analysis, metrics: { patterns: 1247, users: 4230 } };
+}
+async function mockApi_generateVariation(body){
+  await sleep(180);
+  const base = body && body.pattern ? body.pattern : generateMockByStyle({grid_size:8});
+  // small variation: jitter positions
+  const p = JSON.parse(JSON.stringify(base));
+  if(p.dots) p.dots = p.dots.map(d => [d[0] + (Math.random()-0.5)*0.15, d[1] + (Math.random()-0.5)*0.15]);
+  p.analysis = { symmetry_type: p.analysis ? p.analysis.symmetry_type : '8-fold', complexity_score: ((Math.random()*4)+4).toFixed(2) };
+  return {pattern: p, analysis: p.analysis};
+}
+async function mockApi_upload(file){
+  // just ignore file contents and return a random pattern (mimic server behavior)
+  await sleep(400);
+  const p = generateMockByStyle({grid_size:8, complexity:4});
+  return { pattern: p, analysis: p.analysis };
+}
+async function mockApi_analyzePattern(body){
+  await sleep(120);
+  const p = body || {};
+  // simple analysis: count dots and lines
+  const dots = p.dots ? p.dots.length : 0;
+  const lines = p.lines ? p.lines.length : 0;
+  return { dots, lines, symmetry_guess: (p.analysis && p.analysis.symmetry_type) ? p.analysis.symmetry_type : 'unknown', complexity_score: ((dots+lines)/50).toFixed(2) };
+}
+async function mockApi_visualize(body){
+  // returns base64 PNG of a client-rendered canvas for convenience
+  await sleep(180);
+  const pattern = body.pattern || generateMockByStyle({grid_size:8});
+  // render to a hidden canvas and return base64
+  const canvas = document.createElement('canvas'); canvas.width = 800; canvas.height = 800;
+  const ctx = canvas.getContext('2d');
+  // simple render
+  ctx.fillStyle = '#070707'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  // draw dots & lines scaled
+  const pts = [];
+  if(pattern.dots) pattern.dots.forEach(d=>pts.push([d[0],d[1]]));
+  if(pattern.lines) pattern.lines.forEach(l=>{ pts.push(l.start); pts.push(l.end); });
+  if(pts.length){
+    let minx=Infinity, miny=Infinity, maxx=-Infinity, maxy=-Infinity;
+    pts.forEach(p=>{ minx=Math.min(minx,p[0]); miny=Math.min(miny,p[1]); maxx=Math.max(maxx,p[0]); maxy=Math.max(maxy,p[1]); });
+    const pad=60;
+    const scale = Math.min((canvas.width-2*pad)/((maxx-minx)||1),(canvas.height-2*pad)/((maxy-miny)||1));
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = Math.max(1, pattern.line_thickness||2);
+    if(pattern.lines) pattern.lines.forEach(l=>{
+      const sx = pad + (l.start[0]-minx)*scale, sy = pad + (l.start[1]-miny)*scale, ex = pad + (l.end[0]-minx)*scale, ey = pad + (l.end[1]-miny)*scale;
+      ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(ex,ey); ctx.stroke();
+    });
+    if(pattern.dots){
+      ctx.fillStyle = '#fff';
+      pattern.dots.forEach(d=>{
+        const x = pad + (d[0]-minx)*scale, y = pad + (d[1]-miny)*scale;
+        ctx.beginPath(); ctx.arc(x,y, Math.max(1, 3*(pattern.dot_scale||1)), 0, Math.PI*2); ctx.fill();
+      });
+    }
+  }
+  const b64 = canvas.toDataURL('image/png').split(',')[1];
+  return { png: b64 };
+}
+async function mockApi_samplePatterns(){
+  await sleep(100);
+  return {
+    "Traditional Square": generateMockByStyle({pattern_type:'traditional', grid_size:8}),
+    "Spiral Lotus": generateMockByStyle({style:'spiral', grid_size:10, complexity:6})
+  };
+}
+async function mockApi_gallerySave(body){
+  await sleep(80);
+  return { ok: true, id: 'local-'+Date.now(), saved: true };
+}
+async function mockApi_businessDemo(){
+  await sleep(200);
+  return { summary: 'Mock demo: potential product ideas generated', items: [{name:'Printed Kolam Poster', est:1200}, {name:'Pattern NFT idea', est:340}] };
+}
+async function mockApi_exportSvg(body){
+  await sleep(80);
+  // return a simple svg string as 'svg'
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><rect width="100%" height="100%" fill="#070707"/></svg>';
+  return { svg };
+}
+
+/* ---------- API call wrappers: try real fetch first, fallback to mock ---------- */
+async function api_call_generate(params){
+  setStatus('generate');
+  if(MOCK_MODE) { await sleep(120); const p = mockApi_generate(params); return p; }
+  try {
+    const res = await fetch('/api/generate',{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(params)});
+    if(!res.ok) throw new Error(await res.text());
+    const json = await res.json(); setStatus('idle'); return json;
+  } catch(err){
+    console.warn('api/generate failed, using mock', err);
+    setStatus('error'); return mockApi_generate(params);
+  }
+}
+async function api_call_random(style){
+  setStatus('random');
+  if(MOCK_MODE) return mockApi_randomKolam({style});
+  try {
+    const res = await fetch('/api/random-kolam?style=' + encodeURIComponent(style||'random'));
+    if(!res.ok) throw new Error(await res.text());
+    return await res.json();
+  } catch(err){
+    console.warn('api/random-kolam failed, mock', err);
+    setStatus('error'); return mockApi_randomKolam({style});
+  }
+}
+async function api_call_generateVariation(body){
+  setStatus('variation');
+  if(MOCK_MODE) return mockApi_generateVariation(body);
+  try {
+    const res = await fetch('/api/generate_variation',{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+    if(!res.ok) throw new Error(await res.text());
+    return await res.json();
+  } catch(err){ console.warn(err); setStatus('error'); return mockApi_generateVariation(body); }
+}
+async function api_call_upload(file){
+  setStatus('upload');
+  if(MOCK_MODE) return mockApi_upload(file);
+  try {
+    const fd = new FormData(); fd.append('file', file);
+    const res = await fetch('/api/upload',{method:'POST', body: fd});
+    if(!res.ok) throw new Error(await res.text());
+    return await res.json();
+  } catch(err){ console.warn('upload failed', err); setStatus('error'); return mockApi_upload(file); }
+}
+async function api_call_analyzePattern(pattern){
+  setStatus('analyze');
+  if(MOCK_MODE) return mockApi_analyzePattern(pattern);
+  try {
+    const res = await fetch('/api/analyze_pattern',{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(pattern)});
+    if(!res.ok) throw new Error(await res.text());
+    return await res.json();
+  } catch(err){ console.warn('analyze_pattern failed', err); setStatus('error'); return mockApi_analyzePattern(pattern); }
+}
+async function api_call_visualize(pattern, mode='pattern'){
+  setStatus('visualize');
+  if(MOCK_MODE) return mockApi_visualize({pattern, mode});
+  try {
+    const res = await fetch('/api/visualize',{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({pattern,mode})});
+    if(!res.ok) throw new Error(await res.text());
+    return await res.json();
+  } catch(err){ console.warn('visualize failed', err); setStatus('error'); return mockApi_visualize({pattern,mode}); }
+}
+async function api_call_samplePatterns(){ setStatus('samples'); if(MOCK_MODE) return mockApi_samplePatterns(); try { const res = await fetch('/api/sample_patterns'); if(!res.ok) throw new Error(await res.text()); return await res.json(); } catch(err){ console.warn(err); setStatus('error'); return mockApi_samplePatterns(); } }
+async function api_call_gallerySave(imgData, name){ setStatus('gallery_save'); if(MOCK_MODE) return mockApi_gallerySave({image: imgData, name}); try { const res = await fetch('/api/gallery_save',{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name, image: imgData})}); if(!res.ok) throw new Error(await res.text()); return await res.json(); } catch(err){ console.warn(err); setStatus('error'); return mockApi_gallerySave({image: imgData, name}); } }
+async function api_call_businessDemo(){ setStatus('demo'); if(MOCK_MODE) return mockApi_businessDemo(); try { const res = await fetch('/api/business_demo'); if(!res.ok) throw new Error(await res.text()); return await res.json(); } catch(err){ console.warn(err); setStatus('error'); return mockApi_businessDemo(); } }
+async function api_call_exportSvg(pattern){ setStatus('export_svg'); if(MOCK_MODE) return mockApi_exportSvg({pattern}); try { const res = await fetch('/api/export_svg',{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({pattern})}); if(!res.ok) throw new Error(await res.text()); return await res.json(); } catch(err){ console.warn(err); setStatus('error'); return mockApi_exportSvg({pattern}); } }
+
+/* ---------- UI bindings ---------- */
+(function bindUI(){
+  // display binders for ranges
+  function bindRange(id, dispId, fmt){
+    const r = $(id), d = $(dispId); const f = fmt||((v)=>v);
+    r.addEventListener('input', ()=> d.textContent = f(r.value));
+    d.textContent = f(r.value);
+  }
+  bindRange('grid_size','grid_size_val');
+  bindRange('complexity','complexity_val');
+  bindRange('line_thickness','line_thickness_val');
+  bindRange('dot_density','dot_density_val', v => parseFloat(v).toFixed(1));
+  bindRange('curve_smoothness','curve_smoothness_val', v => parseFloat(v).toFixed(2));
+
+  // generate using server or mock
+  $('btn_generate').addEventListener('click', async ()=>{
+    const params = {
+      grid_size: parseInt($('grid_size').value),
+      pattern_type: $('pattern_type').value,
+      complexity: parseInt($('complexity').value),
+      symmetry: $('symmetry').value,
+      line_thickness: parseInt($('line_thickness').value),
+      dot_density: parseFloat($('dot_density').value),
+      curve_smoothness: parseFloat($('curve_smoothness').value),
+      authentic_rules: $('authentic_rules').checked,
+      modern_variations: $('modern_variations').checked,
+      seed: $('seed').value || null,
+      line_style: $('line_style').value
+    };
+    $('loadingOverlay').classList.add('show');
+    const res = await api_call_generate(params);
+    $('loadingOverlay').classList.remove('show');
+    const pattern = res.pattern || res;
+    if(pattern){ drawMainPattern(pattern); lastPattern = pattern; if(res.analysis) $('analysis_output').textContent = JSON.stringify(res.analysis,null,2); }
+    else alert('Generate returned no pattern.');
+  });
+
+  // generate local mock instantly
+  $('btn_generate_client').addEventListener('click', ()=>{
+    const params = { grid_size: parseInt($('grid_size').value), complexity: parseInt($('complexity').value), pattern_type: $('pattern_type').value, line_thickness: parseInt($('line_thickness').value), dot_density: parseFloat($('dot_density').value) };
+    const p = generateMockByStyle(params); drawMainPattern(p); lastPattern = p; setStatus('generated local');
+  });
+
+  // random kolam api
+  $('btn_generate_random').addEventListener('click', async ()=>{
+    $('loadingOverlay').classList.add('show');
+    const res = await api_call_random('random');
+    $('loadingOverlay').classList.remove('show');
+    if(res.pattern){ drawMainPattern(res.pattern); lastPattern = res.pattern; }
+  });
+
+  // variation
+  $('btn_generate_variation').addEventListener('click', async ()=>{
+    if(!lastPattern) return alert('No pattern to vary (generate or load first)');
+    $('loadingOverlay').classList.add('show');
+    const res = await api_call_generateVariation({pattern:lastPattern});
+    $('loadingOverlay').classList.remove('show');
+    if(res.pattern){ drawMainPattern(res.pattern); lastPattern=res.pattern; }
+  });
+
+  // export json
+  $('btn_export_json').addEventListener('click', ()=>{
+    if(!lastPattern) return alert('No pattern to export'); const blob = new Blob([JSON.stringify(lastPattern,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='patternova_kolam.json'; a.click();
+  });
+
+  // download png
+  $('btn_download_png').addEventListener('click', ()=> { const a=document.createElement('a'); a.href=$('kolamCanvas').toDataURL('image/png'); a.download='kolam.png'; a.click(); });
+
+  // export svg (client)
+  $('btn_download_svg').addEventListener('click', async ()=>{
+    if(!lastPattern) return alert('No pattern to export');
+    const resp = await api_call_exportSvg(lastPattern);
+    if(resp.svg){
+      const blob = new Blob([resp.svg],{type:'image/svg+xml'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kolam.svg'; a.click();
+    } else alert('SVG export failed');
+  });
+
+  // server render
+  $('btn_render_server').addEventListener('click', async ()=>{
+    if(!lastPattern) return alert('No pattern to render');
+    $('loadingOverlay').classList.add('show');
+    const resp = await api_call_visualize(lastPattern, $('viz_mode').value);
+    $('loadingOverlay').classList.remove('show');
+    if(resp && resp.png){ $('viz_image').src = 'data:image/png;base64,' + resp.png; $('viz_image').style.display='block'; $('viz_canvas_wrap').style.display='none'; } else alert('Server render not available, try client preview.');
+  });
+
+  // client preview render
+  $('btn_render_client').addEventListener('click', ()=>{ if(!lastPattern) return alert('No pattern to preview'); fitAndDraw(vizCtx, vizCanvas, lastPattern); $('viz_image').style.display='none'; $('viz_canvas_wrap').style.display='block'; });
+
+  // viz download
+  $('btn_viz_download').addEventListener('click', ()=>{ if($('viz_image').src){ const a=document.createElement('a'); a.href=$('viz_image').src; a.download='viz.png'; a.click(); return; } const a=document.createElement('a'); a.href=$('vizCanvas').toDataURL('image/png'); a.download='viz_preview.png'; a.click(); });
+
+  // analyze JSON
+  $('btn_analyze_json').addEventListener('click', async ()=>{ try{ const txt=$('analysis_input').value; if(!txt) return alert('Paste pattern JSON'); const obj=JSON.parse(txt); $('loadingOverlay').classList.add('show'); const res=await api_call_analyzePattern(obj); $('loadingOverlay').classList.remove('show'); $('analysis_output').textContent = JSON.stringify(res,null,2); }catch(e){ alert('Invalid JSON or error: '+e.message); $('loadingOverlay').classList.remove('show'); } });
+
+  // analyze canvas (lastPattern)
+  $('btn_analyze_canvas').addEventListener('click', async ()=>{ if(!lastPattern) return alert('No pattern to analyze'); $('loadingOverlay').classList.add('show'); const res = await api_call_analyzePattern(lastPattern); $('loadingOverlay').classList.remove('show'); $('analysis_output').textContent = JSON.stringify(res,null,2); });
+
+  // analyze uploaded image (analysis tab)
+  $('btn_analyze_image').addEventListener('click', async ()=>{ const f = $('analysis_image_upload').files[0]; if(!f) return alert('Choose file'); $('loadingOverlay').classList.add('show'); const res = await api_call_upload(f); $('loadingOverlay').classList.remove('show'); if(res.pattern){ drawMainPattern(res.pattern); lastPattern=res.pattern; if(res.analysis) $('analysis_output').textContent = JSON.stringify(res.analysis,null,2); } });
+
+  // quick upload analyze (sidebar)
+  $('btn_quick_analyze').addEventListener('click', async ()=>{ const f=$('quickUpload').files[0]; if(!f) return alert('Choose file'); $('loadingOverlay').classList.add('show'); const res = await api_call_upload(f); $('loadingOverlay').classList.remove('show'); if(res.pattern){ drawMainPattern(res.pattern); lastPattern=res.pattern; if(res.analysis) $('analysis_output').textContent = JSON.stringify(res.analysis,null,2); } });
+
+  $('btn_quick_preview').addEventListener('click', async ()=>{ const f=$('quickUpload').files[0]; if(!f) return alert('Choose file'); const res = await api_call_upload(f); if(res.pattern) drawMainPattern(res.pattern); });
+
+  // gallery add local
+  $('btn_add_gallery').addEventListener('click', ()=> {
+    const f = $('gallery_upload').files[0]; const name = $('gallery_name').value || 'My Kolam';
+    if(!f) return alert('Choose file');
+    const reader = new FileReader();
+    reader.onload = ()=> {
+      const b64 = reader.result;
+      addLocalGalleryItem({name, image: b64});
+    };
+    reader.readAsDataURL(f);
+  });
+
+  // gallery save to server
+  $('btn_save_gallery_server').addEventListener('click', async ()=> {
+    const items = loadLocalGallery();
+    if(items.length===0) return alert('No items in local gallery');
+    const item = items[items.length-1];
+    $('loadingOverlay').classList.add('show');
+    const resp = await api_call_gallerySave(item.image, item.name);
+    $('loadingOverlay').classList.remove('show');
+    if(resp && resp.ok) alert('Saved to server'); else alert('Save failed or server not available, item saved locally');
+  });
+
+  // run business demo
+  $('btn_run_business_demo').addEventListener('click', async ()=> {
+    $('loadingOverlay').classList.add('show');
+    const res = await api_call_businessDemo();
+    $('loadingOverlay').classList.remove('show');
+    if(res && res.summary) alert('Business Demo: ' + res.summary);
+    else alert('Demo completed: ' + JSON.stringify(res));
+  });
+
+  // toggle mock mode
+  $('btn_toggle_mock').addEventListener('click', ()=> { MOCK_MODE = !MOCK_MODE; $('btn_toggle_mock').textContent = 'Mock: ' + (MOCK_MODE ? 'On' : 'Off'); });
+
+})(); // bindUI
+
+/* ---------- gallery local storage helpers ---------- */
+function loadLocalGallery(){ try{ const data = localStorage.getItem('patternova_gallery'); return data ? JSON.parse(data) : []; } catch(e){ console.warn('gallery load failed', e); return []; } }
+function saveLocalGallery(arr){ try{ localStorage.setItem('patternova_gallery', JSON.stringify(arr)); return true; } catch(e){ console.warn('gallery save fail', e); return false; } }
+function addLocalGalleryItem(item){ const arr = loadLocalGallery(); arr.push(item); saveLocalGallery(arr); renderGallery(); }
+function renderGallery(){ const cont = $('gallery_list'); cont.innerHTML=''; const arr = loadLocalGallery(); arr.forEach((it, idx)=>{
+  const div = document.createElement('div'); div.className='gallery-item';
+  const img = document.createElement('img'); img.src = it.image;
+  const title = document.createElement('div'); title.textContent = it.name; title.style.marginTop='6px'; title.style.fontSize='13px';
+  div.appendChild(img); div.appendChild(title); cont.appendChild(div);
+  div.addEventListener('click', ()=> { // click loads mock generated pattern for now
+    const p = generateMockByStyle({grid_size:8}); drawMainPattern(p); lastPattern=p;
+  });
+}); }
+renderGallery();
+
+/* ---------- populate samples ---------- */
+async function populateSamples(){
+  const resp = await api_call_samplePatterns();
+  const cont = $('samples_list'); cont.innerHTML='';
+  Object.keys(resp).forEach(k=>{
+    const p = resp[k];
+    const card = document.createElement('div'); card.className='card'; card.style.width='220px'; card.style.margin='6px';
+    const title = document.createElement('div'); title.textContent = k; title.style.fontWeight='700';
+    const btn = document.createElement('button'); btn.textContent = 'Load Sample'; btn.className='smallbtn';
+    btn.addEventListener('click', ()=>{ lastPattern = p; drawMainPattern(p); if(p.analysis) $('analysis_output').textContent = JSON.stringify(p.analysis,null,2); });
+    card.appendChild(title); card.appendChild(btn); cont.appendChild(card);
+  });
+}
+populateSamples();
+
+/* ---------- initial placeholder ---------- */
+(function init(){
+  kolamCtx.fillStyle = '#070707'; kolamCtx.fillRect(0,0,kolamCanvas.width, kolamCanvas.height);
+  kolamCtx.fillStyle = '#9aa0a6'; kolamCtx.font = '14px Inter'; kolamCtx.fillText('No pattern yet — press Generate', 18, 28);
+  vizCtx.fillStyle = '#070707'; vizCtx.fillRect(0,0,vizCanvas.width, vizCanvas.height);
+  vizCtx.fillStyle = '#9aa0a6'; vizCtx.fillText('Visualization preview', 18, 28);
+  $('metric_patterns').textContent = '1,247'; $('metric_users').textContent = '4,230';
+  setStatus('idle');
+})();
+
+/* ===============================
+   End of single-file PATTERNOVA app
+   =============================== */
+
+</script>
+</body>
+</html>
